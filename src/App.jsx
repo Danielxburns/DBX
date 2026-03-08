@@ -1,8 +1,34 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import logo from "./assets/shield-logo.svg";
+import testimonialsData from "./assets/testimonials.json";
+
+function TestimonialCard({ testimonial }) {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <div className="bg-slate-950 border border-slate-800 rounded-2xl p-6 flex flex-col">
+      <div className={`text-slate-300 text-sm mb-4 overflow-hidden transition-all ${expanded ? "max-h-96" : "max-h-24"}`}>
+        {testimonial.testimonial}
+      </div>
+
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className="text-amber-400 text-xs mb-3 self-start hover:text-amber-300"
+      >
+        {expanded ? "Show less" : "Read more"}
+      </button>
+
+      <div className="mt-auto text-slate-500 text-xs">
+        {testimonial.name} · {testimonial.neighborhood}
+      </div>
+    </div>
+  );
+}
 
 function ProjectCarousel({ project }) {
   const [index, setIndex] = useState(0);
+  const [fullscreen, setFullscreen] = useState(false);
+  const [touchStart, setTouchStart] = useState(null);
 
   const next = () => {
     setIndex((i) => (i === project.media.length - 1 ? 0 : i + 1));
@@ -12,53 +38,128 @@ function ProjectCarousel({ project }) {
     setIndex((i) => (i === 0 ? project.media.length - 1 : i - 1));
   };
 
+  const handleTouchStart = (e) => {
+    setTouchStart(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e) => {
+    if (touchStart === null) return;
+    const diff = touchStart - e.changedTouches[0].clientX;
+
+    if (diff > 50) next();
+    if (diff < -50) prev();
+
+    setTouchStart(null);
+  };
+
   const item = project.media[index];
   const src = `${project.folder}/${item.file}`;
 
+  const Media = (
+    item.type === "video" ? (
+      <video src={src} controls className="h-full w-full object-cover" />
+    ) : (
+      <img
+        src={src}
+        alt={project.title}
+        className="h-full w-full object-cover cursor-pointer"
+        onClick={() => setFullscreen(true)}
+      />
+    )
+  );
+
   return (
-    <div className="bg-slate-950 rounded-2xl border border-slate-800 shadow-lg overflow-hidden">
-      <div className="relative h-64 bg-slate-900">
-        {item.type === "video" ? (
-          <video src={src} controls className="h-full w-full object-cover" />
-        ) : (
-          <img src={src} alt={project.title} className="h-full w-full object-cover" />
-        )}
+    <>
+      <div className="bg-slate-950 rounded-2xl border border-slate-800 shadow-lg overflow-hidden">
+        <div
+          className="relative h-64 bg-slate-900"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
+          {Media}
 
-        {project.media.length > 1 && (
-          <>
-            <button
-              onClick={prev}
-              className="absolute left-3 top-1/2 -translate-y-1/2 bg-slate-900/70 hover:bg-slate-900 text-white px-3 py-2 rounded-xl"
-            >
-              ‹
-            </button>
+          {project.media.length > 1 && (
+            <>
+              <button
+                onClick={prev}
+                className="absolute left-3 top-1/2 -translate-y-1/2 bg-slate-900/70 hover:bg-slate-900 text-white px-3 py-2 rounded-xl"
+              >
+                ‹
+              </button>
 
-            <button
-              onClick={next}
-              className="absolute right-3 top-1/2 -translate-y-1/2 bg-slate-900/70 hover:bg-slate-900 text-white px-3 py-2 rounded-xl"
-            >
-              ›
-            </button>
-          </>
-        )}
+              <button
+                onClick={next}
+                className="absolute right-3 top-1/2 -translate-y-1/2 bg-slate-900/70 hover:bg-slate-900 text-white px-3 py-2 rounded-xl"
+              >
+                ›
+              </button>
+
+              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
+                {project.media.map((_, i) => (
+                  <div
+                    key={i}
+                    onClick={() => setIndex(i)}
+                    className={`h-2 w-2 rounded-full cursor-pointer ${
+                      i === index ? "bg-amber-400" : "bg-slate-600"
+                    }`}
+                  />
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+
+        <div className="p-6">
+          <h4 className="text-amber-400 font-semibold mb-2">{project.title}</h4>
+          <p className="text-slate-400 text-sm">{item.caption}</p>
+        </div>
       </div>
 
-      <div className="p-6">
-        <h4 className="text-amber-400 font-semibold mb-2">{project.title}</h4>
-        <p className="text-slate-400 text-sm">{item.caption}</p>
-      </div>
-    </div>
+      {fullscreen && item.type === "image" && (
+        <div
+          className="fixed inset-0 bg-black/90 flex items-center justify-center z-50"
+          onClick={() => setFullscreen(false)}
+        >
+          <img
+            src={src}
+            alt={project.title}
+            className="max-h-[90vh] max-w-[90vw] object-contain"
+          />
+        </div>
+      )}
+    </>
   );
 }
 
 export default function DBXHomeServices() {
-  const smsLink =
-    "sms:15122976548?&body=Hi%20Daniel,%20I'm%20looking%20for%20a%20handyman%20to%20";
+  const [testimonials] = useState(testimonialsData);
+  const [showHeader, setShowHeader] = useState(true);
+  const [lastScroll, setLastScroll] = useState(0);
+  const smsLink = "sms:15122976548?&body=Hi Daniel, I'm looking for a handyman to ";
+
+  useEffect(() => {
+  const handleScroll = () => {
+    const current = window.scrollY;
+
+    if (current > lastScroll && current > 80) {
+      setShowHeader(false);   // scrolling down
+    } else {
+      setShowHeader(true);    // scrolling up
+    }
+
+    setLastScroll(current);
+  };
+
+  window.addEventListener("scroll", handleScroll);
+
+  return () => window.removeEventListener("scroll", handleScroll);
+}, [lastScroll]);
+  
 
   const projects = [
     {
       title: "Luxury Condo Fixture Modernization",
-      folder: "/projects/condo-fixtures",
+      folder: "/src/assets/projects/condo-fixtures",
       media: [
         {
           file: "1.jpg",
@@ -79,7 +180,7 @@ export default function DBXHomeServices() {
     },
     {
       title: "Short‑Term Rental Refresh",
-      folder: "/projects/str-refresh",
+      folder: "/src/assets/projects/str-refresh",
       media: [
         {
           file: "1.jpg",
@@ -95,7 +196,7 @@ export default function DBXHomeServices() {
     },
     {
       title: "Custom Garage Storage System",
-      folder: "/projects/garage-storage",
+      folder: "/src/assets/projects/garage-storage",
       media: [
         {
           file: "1.jpg",
@@ -108,53 +209,68 @@ export default function DBXHomeServices() {
           caption: "Clean‑lined cabinetry with concealed mounting hardware."
         }
       ]
+    },
+    {
+      title: "Kitchen Hardware & Fixture Upgrade",
+      folder: "/src/assets/projects/kitchen-upgrade",
+      media: [
+        {
+          file: "1.jpg",
+          type: "image",
+          caption: "Precision alignment of cabinet pulls and updated fixtures."
+        },
+        {
+          file: "2.jpg",
+          type: "image",
+          caption: "Modern hardware installed consistently across the full kitchen."
+        },
+        {
+          file: "3.mp4",
+          type: "video",
+          caption: "Finished result highlighting the updated kitchen details."
+        }
+      ]
     }
   ];
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
       {/* Header */}
-      <header className="sticky top-0 z-50 backdrop-blur bg-slate-950/90 border-b border-slate-800">
-        <div className="mx-auto flex items-center justify-between px-4 sm:px-6 py-4">
-          <div className="flex items-center gap-3">
-            <img
-              src= {logo}
-              alt="DBX Home Services Logo"
-              className="w-auto h-20 sm:h-14 rounded-xl shadow-lg"
-            />
+      <header className={`fixed top-0 left-0 right-0 z-50 bg-slate-950/90 backdrop-blur border-b border-slate-800 transition-transform duration-300 ${showHeader ? "translate-y-0" : "-translate-y-full"}`}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="flex items-center justify-between h-16">
 
-            <div>
-              <h1 className="text-lg sm:text-xl font-semibold tracking-wide">
-                DBX Home Services
-              </h1>
-              <p className="text-xs text-slate-400">
-                Central East Austin · Austin, Texas
-              </p>
+            {/* Logo + Brand */}
+            <div className="flex items-center gap-3">
+              <img src={logo} alt="DBX Home Services" className="h-9 w-9" />
+              <div className="leading-tight">
+                <p className="text-sm font-semibold">DBX Home Services</p>
+                <p className="text-[11px] text-slate-400 hidden sm:block">Central East Austin</p>
+              </div>
             </div>
+
+            {/* Desktop Nav */}
+            <nav className="hidden md:flex items-center gap-6 text-sm text-slate-300">
+              <a href="#services" className="hover:text-white">Services</a>
+              <a href="#pricing" className="hover:text-white">Pricing</a>
+              <a href="#projects" className="hover:text-white">Projects</a>
+              <a href="#testimonials" className="hover:text-white">Testimonials</a>
+              <a href="#contact" className="bg-amber-400 text-black px-4 py-2 rounded-xl font-semibold hover:bg-amber-300">Contact</a>
+            </nav>
+
+            {/* Mobile Text Button */}
+            <a
+              href="sms:15122976548?&body=Hi Daniel, I'm looking for a handyman to ..."
+              className="md:hidden bg-amber-400 text-black text-sm font-semibold px-4 py-2 rounded-xl"
+            >
+              Text Daniel
+            </a>
           </div>
-          
-          <nav className="md:flex gap-8 text-sm text-slate-300">
-            <a href="#services" className="hover:text-amber-400 transition">
-              Services
-            </a>
-            <a href="#pricing" className="hover:text-amber-400 transition">
-              Pricing
-            </a>
-            <a href="#projects" className="hover:text-amber-400 transition">
-              Projects
-            </a>
-            <a href="#testimonials" className="hover:text-amber-400 transition">
-              Testimonials
-            </a>
-            <a href="#contact" className="hover:text-amber-400 transition">
-              Contact
-            </a>
-          </nav>
         </div>
       </header>
 
       {/* Hero */}
-      <section className="relative py-20 sm:py-28 px-4 sm:px-6">
+      <section className="relative py-24 sm:py-32 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
           <div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight mb-6">
@@ -202,35 +318,25 @@ export default function DBXHomeServices() {
         <div className="max-w-6xl mx-auto">
           <h3 className="text-2xl sm:text-3xl font-semibold mb-10 text-center">Services</h3>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-2 gap-6">
             <div className="bg-slate-950 border border-slate-800 rounded-2xl p-6">
               <h4 className="text-amber-400 font-semibold mb-2">Repairs & Maintenance</h4>
-              <p className="text-slate-400 text-sm">General household repairs, fixture replacements, adjustments, and preventative maintenance to keep your home operating smoothly.</p>
+              <p className="text-slate-400 text-sm">General household repairs, fixture replacements, adjustments, and preventative maintenance performed with precision and care.</p>
             </div>
 
             <div className="bg-slate-950 border border-slate-800 rounded-2xl p-6">
               <h4 className="text-amber-400 font-semibold mb-2">Installations</h4>
-              <p className="text-slate-400 text-sm">Lighting, hardware, shelving, wall mounting, appliances, and other precise installations completed with attention to detail.</p>
+              <p className="text-slate-400 text-sm">Lighting, hardware, shelving, appliances, and wall mounting installed cleanly and accurately.</p>
             </div>
 
             <div className="bg-slate-950 border border-slate-800 rounded-2xl p-6">
               <h4 className="text-amber-400 font-semibold mb-2">Rental Property Turnovers</h4>
-              <p className="text-slate-400 text-sm">Fast, reliable improvements and repairs for long‑term and short‑term rentals between tenants or bookings.</p>
+              <p className="text-slate-400 text-sm">Efficient repairs and improvements for long‑term and short‑term rentals between tenants or bookings.</p>
             </div>
 
             <div className="bg-slate-950 border border-slate-800 rounded-2xl p-6">
               <h4 className="text-amber-400 font-semibold mb-2">Interior Improvements</h4>
-              <p className="text-slate-400 text-sm">Trim work, hardware upgrades, small carpentry projects, and finishing details that elevate interior spaces.</p>
-            </div>
-
-            <div className="bg-slate-950 border border-slate-800 rounded-2xl p-6">
-              <h4 className="text-amber-400 font-semibold mb-2">Storage & Organization</h4>
-              <p className="text-slate-400 text-sm">Garage storage systems, shelving, and practical organization solutions designed to maximize usable space.</p>
-            </div>
-
-            <div className="bg-slate-950 border border-slate-800 rounded-2xl p-6">
-              <h4 className="text-amber-400 font-semibold mb-2">Small Project Specialist</h4>
-              <p className="text-slate-400 text-sm">Ideal for homeowners and property managers who need high‑quality work completed without hiring a large contractor.</p>
+              <p className="text-slate-400 text-sm">Trim work, hardware upgrades, and detail‑focused projects that elevate the look and function of your space.</p>
             </div>
           </div>
         </div>
@@ -242,7 +348,9 @@ export default function DBXHomeServices() {
           <h3 className="text-2xl sm:text-3xl font-semibold mb-8">Pricing</h3>
 
           <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8">
-            <p className="text-4xl font-bold text-amber-400 mb-4">$85 / hour</p>
+            <p className="text-4xl font-bold text-amber-400 mb-2">$85 / hour</p>
+
+            <p className="text-xl font-semibold text-amber-300 mb-4">$500 day rate</p>
 
             <p className="text-slate-400 mb-4">Professional hourly service with transparent billing.</p>
 
@@ -278,20 +386,9 @@ export default function DBXHomeServices() {
           <h3 className="text-2xl sm:text-3xl font-semibold mb-10 text-center">Client Testimonials</h3>
 
           <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-slate-950 border border-slate-800 rounded-2xl p-6">
-              <p className="text-slate-300 text-sm mb-4">“Daniel was punctual, professional, and extremely detail‑oriented. Everything was completed perfectly.”</p>
-              <p className="text-slate-500 text-xs">Homeowner · East Austin</p>
-            </div>
-
-            <div className="bg-slate-950 border border-slate-800 rounded-2xl p-6">
-              <p className="text-slate-300 text-sm mb-4">“Our short‑term rental turnovers are so much easier now. Reliable and efficient every time.”</p>
-              <p className="text-slate-500 text-xs">Property Manager · Austin</p>
-            </div>
-
-            <div className="bg-slate-950 border border-slate-800 rounded-2xl p-6">
-              <p className="text-slate-300 text-sm mb-4">“Excellent craftsmanship and clear communication. Exactly what we were hoping to find.”</p>
-              <p className="text-slate-500 text-xs">Condo Owner · Downtown Austin</p>
-            </div>
+            {testimonials.map((t, i) => (
+              <TestimonialCard key={i} testimonial={t} />
+            ))}
           </div>
         </div>
       </section>
@@ -328,15 +425,7 @@ export default function DBXHomeServices() {
         </div>
       </section>
 
-      {/* Sticky Mobile CTA */}
-      <div className="md:hidden fixed bottom-4 left-4 right-4 z-50">
-        <a
-          href={smsLink}
-          className="block text-center bg-amber-500 hover:bg-amber-400 text-slate-900 font-semibold py-4 rounded-2xl shadow-2xl"
-        >
-          Text Daniel
-        </a>
-      </div>
+      
 
       {/* Footer */}
       <footer
