@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import logo from './assets/shield-logo.svg';
 import testimonialsData from './assets/testimonials.json';
+import danielPhoto from './assets/IMG_4936.JPEG';
 
 // Load each project's metadata (project.json) and media
 const projectMetaFiles = import.meta.glob('./assets/projects/**/project.json', {
@@ -289,19 +290,50 @@ export default function DBXHomeServices() {
               Contact
             </a>
           </div>
+          <div className="flex flex-col items-center md:items-stretch gap-6">
+            {/* Daniel Photo */}
+            <div className="order-2 md:order-1 flex justify-center">
+              <div className="relative w-56 sm:w-64 md:w-64 aspect-3/4 overflow-hidden rounded-[999px] shadow-2xl border border-slate-700">
+                <img
+                  src={danielPhoto}
+                  alt="Daniel Burns"
+                  className="h-full w-full object-cover object-[50%_35%]"
+                />
 
-          <div className="bg-slate-900 p-6 sm:p-8 rounded-2xl shadow-2xl border border-slate-800">
-            <h3 className="text-lg sm:text-xl font-semibold mb-4 text-amber-400">
-              Why DBX?
-            </h3>
+                {/* subtle vignette to focus attention on face */}
+                <div
+                  className="pointer-events-none absolute inset-0 rounded-[999px]"
+                  style={{
+                    background:
+                      'radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(2,6,23,0.35) 80%, rgba(2,6,23,0.6) 100%)',
+                  }}
+                />
 
-            <ul className="space-y-3 text-sm sm:text-base text-slate-300">
-              <li>• Personally performed by Daniel Burns</li>
-              <li>• Meticulous attention to detail</li>
-              <li>• Clear communication & punctuality</li>
-              <li>• Respect for your home & tenants</li>
-              <li>• Professional, consistent pricing</li>
-            </ul>
+                {/* very subtle warm tone overlay to match brand accent */}
+                <div
+                  className="pointer-events-none absolute inset-0 rounded-[999px]"
+                  style={{
+                    background:
+                      'radial-gradient(circle at 50% 30%, rgba(251,191,36,0.12), rgba(251,191,36,0.04) 40%, transparent 70%)',
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Why DBX Card */}
+            <div className="order-1 md:order-2 bg-slate-900 p-6 sm:p-8 rounded-2xl shadow-2xl border border-slate-800">
+              <h3 className="text-lg sm:text-xl font-semibold mb-4 text-amber-400">
+                Why DBX?
+              </h3>
+
+              <ul className="space-y-3 text-sm sm:text-base text-slate-300">
+                <li>• Personally performed by Daniel Burns</li>
+                <li>• Meticulous attention to detail</li>
+                <li>• Clear communication & punctuality</li>
+                <li>• Respect for your home & tenants</li>
+                <li>• Professional, consistent pricing</li>
+              </ul>
+            </div>
           </div>
         </div>
       </section>
