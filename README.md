@@ -20,3 +20,4 @@ If you are developing a production application, we recommend using TypeScript wi
 
 ## Project files
 
+resize images to 1600p max and save as webp

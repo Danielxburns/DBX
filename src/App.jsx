@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import logo from './assets/shield-logo.svg';
 import testimonialsData from './assets/testimonials.json';
-import danielPhoto from './assets/IMG_4936.JPEG';
+import danielPhoto from './assets/headshot.png';
 
 // Load each project's metadata (project.json) and media
 const projectMetaFiles = import.meta.glob('./assets/projects/**/project.json', {
@@ -293,7 +293,7 @@ export default function DBXHomeServices() {
           <div className="flex flex-col items-center md:items-stretch gap-6">
             {/* Daniel Photo */}
             <div className="order-2 md:order-1 flex justify-center">
-              <div className="relative w-56 sm:w-64 md:w-64 aspect-3/4 overflow-hidden rounded-[999px] shadow-2xl border border-slate-700">
+              <div className="relative w-56 sm:w-64 md:w-64 ">
                 <img
                   src={danielPhoto}
                   alt="Daniel Burns"
