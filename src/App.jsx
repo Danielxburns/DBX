@@ -219,7 +219,7 @@ export default function DBXHomeServices() {
           <div className="flex items-center justify-between h-16">
             {/* Logo + Brand */}
             <div className="flex items-center gap-3">
-              <img src={logo} alt="DBX Home Services" className="h-10 w-9" />
+              <img src={logo} alt="DBX Home Services" className="h-14" />
               <div className="leading-tight">
                 <p className="text-sm font-semibold">DBX Home Services</p>
                 <p className="text-[11px] text-slate-400 hidden sm:block">
