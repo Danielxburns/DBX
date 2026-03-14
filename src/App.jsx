@@ -1,43 +1,56 @@
 import { useState, useEffect } from 'react';
 import logo from './assets/shield-logo.svg';
 import testimonialsData from './assets/testimonials.json';
-import projectMeta from './assets/projects/project.json';
 
-// Auto-import all project media
-const projectFiles = import.meta.glob(
-  './assets/projects/**/*.{jpg,jpeg,png,webp,mp4}',
-  { eager: true, query: '?url', import: 'default' },
+
+// Load each project's metadata (project.json) and media
+const projectMetaFiles = import.meta.glob(
+  "./assets/projects/**/project.json",
+  { eager: true }
 );
 
+const projectMediaFiles = import.meta.glob(
+  "./assets/projects/**/*.{jpg,jpeg,png,webp,mp4}",
+  { eager: true, query: "?url", import: "default" }
+);
 
-const projectsMap = {};
+const projects = Object.entries(projectMetaFiles).map(([metaPath, metaModule]) => {
+  const meta = metaModule.default || metaModule;
 
-Object.entries(projectFiles).forEach(([path, url]) => {
-  const parts = path.split('/');
-  const folder = parts[3]; // projects/<folder>
+  // folder path containing this project's files
+  const folder = metaPath.split("/").slice(0, -1).join("/");
 
-  if (!projectsMap[folder]) {
-    projectsMap[folder] = {
-      title: folder.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
-      media: [],
-    };
-  }
+  const media = Object.entries(projectMediaFiles)
+    .filter(([path]) => path.startsWith(folder + "/"))
+    .map(([path, url]) => {
+      const filename = path.split("/").pop();
+      const extension = filename.split(".").pop().toLowerCase();
 
-  const extension = path.split('.').pop();
-  const projectInfo = projectMeta.find((p) => p.folder === folder);
+      const filenameNoExt = filename.replace(/\.[^.]+$/, "");
+      const caption =
+        meta?.captions?.[filename] ||
+        meta?.captions?.[`${filenameNoExt}.jpg`] ||
+        meta?.captions?.[`${filenameNoExt}.jpeg`] ||
+        meta?.captions?.[`${filenameNoExt}.png`] ||
+        meta?.captions?.[filenameNoExt] ||
+        "";
 
-  const filename = path.split('/').pop();
+      return {
+        file: url,
+        type: extension === "mp4" ? "video" : "image",
+        caption
+      };
+    })
+    .sort((a, b) => a.file.localeCompare(b.file, undefined, { numeric: true }));
 
-  const caption = projectInfo?.captions?.[filename] || '';
-
-  projectsMap[folder].media.push({
-    file: url,
-    type: extension === 'mp4' ? 'video' : 'image',
-    caption: caption,
-  });
+  return {
+    title: meta.title,
+    description: meta.description || "",
+    media
+  };
 });
 
-const projects = Object.values(projectsMap);
+console.log('projects :>> ', projects);
 
 function TestimonialCard({ testimonial }) {
   const [expanded, setExpanded] = useState(false);
@@ -92,6 +105,9 @@ function ProjectCarousel({ project }) {
   };
 
   const item = project.media[index];
+  if (!item) {
+    return null;
+  }
   const src = item.file;
   const Media =
     item.type === 'video' ? (
