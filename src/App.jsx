@@ -2,61 +2,64 @@ import { useState, useEffect } from 'react';
 import logo from './assets/shield-logo.svg';
 import testimonialsData from './assets/testimonials.json';
 
-
 // Load each project's metadata (project.json) and media
-const projectMetaFiles = import.meta.glob(
-  "./assets/projects/**/project.json",
-  { eager: true }
-);
-
-const projectMediaFiles = import.meta.glob(
-  "./assets/projects/**/*.{jpg,jpeg,png,webp,mp4}",
-  { eager: true, query: "?url", import: "default" }
-);
-
-const projects = Object.entries(projectMetaFiles).map(([metaPath, metaModule]) => {
-  const meta = metaModule.default || metaModule;
-
-  // folder path containing this project's files
-  const folder = metaPath.split("/").slice(0, -1).join("/");
-
-  const media = Object.entries(projectMediaFiles)
-    .filter(([path]) => path.startsWith(folder + "/"))
-    .map(([path, url]) => {
-      const filename = path.split("/").pop();
-      const extension = filename.split(".").pop().toLowerCase();
-
-      const filenameNoExt = filename.replace(/\.[^.]+$/, "");
-      const caption =
-        meta?.captions?.[filename] ||
-        meta?.captions?.[`${filenameNoExt}.jpg`] ||
-        meta?.captions?.[`${filenameNoExt}.jpeg`] ||
-        meta?.captions?.[`${filenameNoExt}.png`] ||
-        meta?.captions?.[filenameNoExt] ||
-        "";
-
-      return {
-        file: url,
-        type: extension === "mp4" ? "video" : "image",
-        caption
-      };
-    })
-    .sort((a, b) => a.file.localeCompare(b.file, undefined, { numeric: true }));
-
-  return {
-    title: meta.title,
-    description: meta.description || "",
-    media
-  };
+const projectMetaFiles = import.meta.glob('./assets/projects/**/project.json', {
+  eager: true,
 });
 
-console.log('projects :>> ', projects);
+const projectMediaFiles = import.meta.glob(
+  './assets/projects/**/*.{jpg,jpeg,png,webp,mp4}',
+  { eager: true, query: '?url', import: 'default' },
+);
+
+const projects = Object.entries(projectMetaFiles).map(
+  ([metaPath, metaModule]) => {
+    const meta = metaModule.default || metaModule;
+
+    // folder path containing this project's files
+    const folder = metaPath.split('/').slice(0, -1).join('/');
+
+    const media = Object.entries(projectMediaFiles)
+      .filter(([path]) => path.startsWith(folder + '/'))
+      .map(([path, url]) => {
+        const filename = path.split('/').pop();
+        const extension = filename.split('.').pop().toLowerCase();
+
+        const filenameNoExt = filename.replace(/\.[^.]+$/, '');
+        const caption =
+          meta?.captions?.[filename] ||
+          meta?.captions?.[`${filenameNoExt}.jpg`] ||
+          meta?.captions?.[`${filenameNoExt}.jpeg`] ||
+          meta?.captions?.[`${filenameNoExt}.png`] ||
+          meta?.captions?.[filenameNoExt] ||
+          '';
+
+        return {
+          file: url,
+          type: extension === 'mp4' ? 'video' : 'image',
+          caption,
+        };
+      })
+      .sort((a, b) =>
+        a.file.localeCompare(b.file, undefined, { numeric: true }),
+      );
+
+    return {
+      title: meta.title,
+      description: meta.description || '',
+      media,
+    };
+  },
+);
 
 function TestimonialCard({ testimonial }) {
   const [expanded, setExpanded] = useState(false);
 
   return (
     <div className="bg-slate-950 border border-slate-800 rounded-2xl p-6 flex flex-col">
+      <div className="mt-auto text-slate-500 text-s mb-3">
+        {testimonial.name} · {testimonial.neighborhood}
+      </div>
       <div
         className={`text-slate-300 text-sm mb-4 overflow-hidden transition-all ${expanded ? 'max-h-96' : 'max-h-24'}`}
       >
@@ -65,14 +68,10 @@ function TestimonialCard({ testimonial }) {
 
       <button
         onClick={() => setExpanded(!expanded)}
-        className="text-amber-400 text-xs mb-3 self-start hover:text-amber-300"
+        className="text-amber-400 text-xs self-start hover:text-amber-300"
       >
         {expanded ? 'Show less' : 'Read more'}
       </button>
-
-      <div className="mt-auto text-slate-500 text-xs">
-        {testimonial.name} · {testimonial.neighborhood}
-      </div>
     </div>
   );
 }
