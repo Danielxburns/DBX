@@ -355,7 +355,7 @@ export default function DBXHomeServices() {
             {/* Interior */}
             <div className="bg-slate-950 border border-slate-800 rounded-2xl p-6 md:p-8 shadow-lg">
               <h4 className="text-xl md:text-2xl font-semibold text-amber-400 mb-4">
-                Interior
+                Interior Repairs
               </h4>
               <ul className="space-y-2 text-base md:text-lg text-slate-300 list-disc list-inside">
                 <li>Lighting and ceiling fan installation</li>
@@ -370,7 +370,7 @@ export default function DBXHomeServices() {
             {/* Exterior */}
             <div className="bg-slate-950 border border-slate-800 rounded-2xl p-6 md:p-8 shadow-lg">
               <h4 className="text-xl md:text-2xl font-semibold text-amber-400 mb-4">
-                Exterior
+                Exterior Repairs
               </h4>
               <ul className="space-y-2 text-base md:text-lg text-slate-300 list-disc list-inside">
                 <li>Fence and gate repair</li>
@@ -399,7 +399,7 @@ export default function DBXHomeServices() {
             {/* Custom */}
             <div className="bg-slate-950 border border-slate-800 rounded-2xl p-6 md:p-8 shadow-lg">
               <h4 className="text-xl md:text-2xl font-semibold text-amber-400 mb-4">
-                Custom
+                Custom Work
               </h4>
               <ul className="space-y-2 text-base md:text-lg text-slate-300 list-disc list-inside">
                 <li>Custom carpentry work</li>
