@@ -279,7 +279,7 @@ export default function DBXHomeServices() {
                 Central East Austin
               </span>
               , DBX Home Services is an exclusive owner‑operated handyman
-              service for homeowners, renters and self‑managed rental properties
+              service for homeowners, renters, STRs and rental properties
               throughout Austin.
             </p>
 
