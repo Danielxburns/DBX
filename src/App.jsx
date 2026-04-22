@@ -58,8 +58,8 @@ function TestimonialCard({ testimonial }) {
 
   return (
     <div className="bg-slate-950 border border-slate-800 rounded-2xl p-6 flex flex-col">
-      <div className="mt-auto text-slate-500 text-s mb-3">
-        {testimonial.name} · {testimonial.neighborhood}
+      <div className="mt-auto text-slate-400 text-s mb-3">
+        {testimonial.name} · {testimonial.neighborhood} · {testimonial.stars}
       </div>
       <div
         className={`text-slate-300 text-sm mb-4 overflow-hidden transition-all ${expanded ? 'max-h-96' : 'max-h-24'}`}
@@ -255,7 +255,7 @@ export default function DBXHomeServices() {
               href="sms:15122976548?&body=Hi Daniel, I'm looking for a handyman to ..."
               className="md:hidden bg-amber-400 text-black text-sm font-semibold px-4 py-2 rounded-xl"
             >
-              Text Daniel
+              Text Now
             </a>
           </div>
         </div>
@@ -287,7 +287,8 @@ export default function DBXHomeServices() {
               href="#footer"
               className="inline-block w-full sm:w-auto text-center bg-amber-500 hover:bg-amber-400 text-slate-900 font-semibold px-6 py-3 rounded-2xl shadow-xl transition"
             >
-              Contact
+              <p>Contact Daniel</p>
+              <p>at (512) 297‑6548</p>
             </a>
           </div>
           <div className="flex flex-col items-center md:items-stretch gap-6">
@@ -332,6 +333,7 @@ export default function DBXHomeServices() {
                 <li>• Clear communication & punctuality</li>
                 <li>• Respect for your home & tenants</li>
                 <li>• Professional, consistent pricing</li>
+                <li>• Limited client list ensures prompt service</li>
               </ul>
             </div>
           </div>
@@ -422,17 +424,14 @@ export default function DBXHomeServices() {
             <p className="text-slate-400 mb-5">
               Professional hourly service with transparent billing.
             </p>
-            <p className="text-4xl font-bold text-amber-400 mb-2">$85 / hour</p>
-            <p className="text-xl font-semibold text-amber-300 mb-2">
-              $500 / day for larger projects
-            </p>
+            <p className="text-4xl font-bold text-amber-400 mb-2">$90 / hour</p>
             <p className="text-base font-semibold text-amber-300 mb-5">
               Materials billed at cost — never marked up
             </p>
 
             <div className="space-y-2 text-slate-400 text-sm">
               <p>Two‑hour minimum per visit</p>
-              <p>Standard mileage applied only when supply runs are required</p>
+              <p>Standard mileage rates applied only when supply runs are required</p>
             </div>
 
             <p className="mt-6 text-slate-500 text-sm">
@@ -481,35 +480,34 @@ export default function DBXHomeServices() {
       {/* Contact */}
       <section id="contact" className="py-20 sm:py-24 px-4 sm:px-6 text-center">
         <div className="max-w-3xl mx-auto">
-          <h3 className="text-2xl sm:text-3xl font-semibold mb-6">
-            Text DBX Home Services
+          <h3 className="text-2xl sm:text-3xl font-semibold mb-3">
+            <p>DBX Home Services</p>
+            <p>(512) 297-6548</p>
           </h3>
-
-          <p className="text-slate-400 mb-4">
-            Located in Central East Austin and serving Austin neighborhoods.
-          </p>
-
-          <p className="text-slate-400 text-sm">
-            $85 per hour · Two‑hour minimum · Materials at cost · Standard
-            mileage for supply runs
-          </p>
-
-          <p className="mt-4 text-slate-500 text-sm">
-            Please include a brief description, location, and photos if
-            possible.
-          </p>
 
           <a
             href={smsLink}
-            className="mt-6 inline-block w-full sm:w-auto text-center bg-amber-500 hover:bg-amber-400 text-slate-900 font-semibold px-8 py-4 rounded-2xl shadow-2xl transition"
+            className="mt-3 inline-block w-full sm:w-auto text-center bg-amber-500 hover:bg-amber-400 text-slate-900 font-semibold px-8 py-4 rounded-2xl shadow-2xl transition"
           >
             Click to Text
           </a>
 
-          <p className="mt-6 text-slate-500 text-sm">
-            Or call directly at (512) 297‑6548. Please leave a message if
-            unavailable and I will return your call as soon as possible.
+          <p className="mt-2 mb-4 text-slate-500 text-sm">
+            Please include a brief description, location, and photos if
+            possible.
           </p>
+
+          <p className="text-slate-400 mb-1">
+            Located in Central East Austin.
+          </p>
+          <p className="text-slate-400 mb-4">
+            Serving downtown and surrounding areas.
+          </p>
+          <p className="text-slate-400 text-sm">
+            $90 per hour · Two‑hour minimum · Materials at cost · Standard
+            mileage rates for supply runs
+          </p>
+
         </div>
       </section>
 
