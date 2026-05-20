@@ -111,10 +111,11 @@ function ProjectCarousel({ project }) {
   const src = item.file;
   const Media =
     item.type === 'video' ? (
-      <video src={src} controls className="h-full w-full object-cover" />
+      <video src={src} loading='lazy'   controls className="h-full w-full object-cover" />
     ) : (
       <img
         src={src}
+        loading='lazy'
         alt={project.title}
         className="h-full w-full object-cover cursor-pointer"
         onClick={() => setFullscreen(true)}
