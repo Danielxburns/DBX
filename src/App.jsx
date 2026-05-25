@@ -111,11 +111,16 @@ function ProjectCarousel({ project }) {
   const src = item.file;
   const Media =
     item.type === 'video' ? (
-      <video src={src} loading='lazy'   controls className="h-full w-full object-cover" />
+      <video
+        src={src}
+        loading="lazy"
+        controls
+        className="h-full w-full object-cover"
+      />
     ) : (
       <img
         src={src}
-        loading='lazy'
+        loading="lazy"
         alt={project.title}
         className="h-full w-full object-cover cursor-pointer"
         onClick={() => setFullscreen(true)}
@@ -432,7 +437,10 @@ export default function DBXHomeServices() {
 
             <div className="space-y-2 text-slate-400 text-sm">
               <p>Two‑hour minimum per visit</p>
-              <p>Standard mileage rates applied only when supply runs are required</p>
+              <p>
+                Standard mileage rates applied only when supply runs are
+                required
+              </p>
             </div>
 
             <p className="mt-6 text-slate-500 text-sm">
@@ -483,7 +491,12 @@ export default function DBXHomeServices() {
         <div className="max-w-3xl mx-auto">
           <h3 className="text-2xl sm:text-3xl font-semibold mb-3">
             <p>DBX Home Services</p>
-            <p>(512) 297-6548</p>
+            <a
+              href="tel:+15122976548"
+              className="text-slate-300 hover:text-amber-400 transition-colors"
+            >
+              (512) 297-6548
+            </a>
           </h3>
 
           <a
@@ -498,9 +511,7 @@ export default function DBXHomeServices() {
             possible.
           </p>
 
-          <p className="text-slate-400 mb-1">
-            Located in Central East Austin.
-          </p>
+          <p className="text-slate-400 mb-1">Located in Central East Austin.</p>
           <p className="text-slate-400 mb-4">
             Serving downtown and surrounding areas.
           </p>
@@ -508,7 +519,6 @@ export default function DBXHomeServices() {
             $90 per hour · Two‑hour minimum · Materials at cost · Standard
             mileage rates for supply runs
           </p>
-
         </div>
       </section>
 
