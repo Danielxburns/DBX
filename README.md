@@ -21,3 +21,5 @@ If you are developing a production application, we recommend using TypeScript wi
 ## Project files
 
 resize images to 1600p max and save as webp
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/d973fd9e-133c-42b6-a35a-6931a98999df/deploy-status)](https://app.netlify.com/projects/dbxhomeservices/deploys)

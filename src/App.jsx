@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import ReactGA from 'react-ga4';
+import { Helmet } from 'react-helmet-async';
 import logo from './assets/shield-logo.svg';
 import testimonialsData from './assets/testimonials.json';
 import danielPhoto from './assets/headshot.png';
@@ -123,7 +125,15 @@ function ProjectCarousel({ project }) {
         loading="lazy"
         alt={project.title}
         className="h-full w-full object-cover cursor-pointer"
-        onClick={() => setFullscreen(true)}
+        onClick={() => {
+          setFullscreen(true);
+
+          ReactGA.event({
+            category: 'Portfolio',
+            action: 'Opened Project Image',
+            label: project.title,
+          });
+        }}
       />
     );
 
@@ -197,6 +207,16 @@ export default function DBXHomeServices() {
   const smsLink =
     "sms:15122976548?&body=Hi Daniel, I'm looking for a handyman to ";
 
+  /* initalize React Google Analytics */
+  useEffect(() => {
+    ReactGA.initialize('G-538422253');
+
+    ReactGA.send({
+      hitType: 'pageview',
+      page: window.location.pathname,
+    });
+  }, []);
+
   useEffect(() => {
     const handleScroll = () => {
       const current = window.scrollY;
@@ -217,6 +237,14 @@ export default function DBXHomeServices() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
+      <Helmet>
+        <title>DBX Home Services | Handyman in Central East Austin</title>
+
+        <meta
+          name="description"
+          content="Owner-operated handyman service in Central East Austin specializing in high-quality residential repairs, installations, and rental property maintenance."
+        />
+      </Helmet>
       {/* Header */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 bg-slate-950/90 backdrop-blur border-b border-slate-800 transition-transform duration-300 ${showHeader ? 'translate-y-0' : '-translate-y-full'}`}
@@ -259,6 +287,12 @@ export default function DBXHomeServices() {
             {/* Mobile Text Button */}
             <a
               href="sms:15122976548?&body=Hi Daniel, I'm looking for a handyman to ..."
+              onClick={() =>
+                ReactGA.event({
+                  category: 'Contact',
+                  action: 'Text Daniel Click from Mobile Header',
+                })
+              }
               className="md:hidden bg-amber-400 text-black text-sm font-semibold px-4 py-2 rounded-xl"
             >
               Text Now
@@ -290,11 +324,17 @@ export default function DBXHomeServices() {
             </p>
 
             <a
-              href="#footer"
+              href="tel:+15122976548"
+              onClick={() =>
+                ReactGA.event({
+                  category: 'Contact',
+                  action: 'Tel Click from Hero Section',
+                })
+              }
               className="inline-block w-full sm:w-auto text-center bg-amber-500 hover:bg-amber-400 text-slate-900 font-semibold px-6 py-3 rounded-2xl shadow-xl transition"
             >
               <p>Contact Daniel</p>
-              <p>at (512) 297‑6548</p>
+              <p>(512) 297-6548</p>
             </a>
           </div>
           <div className="flex flex-col items-center md:items-stretch gap-6">
@@ -493,6 +533,12 @@ export default function DBXHomeServices() {
             <p>DBX Home Services</p>
             <a
               href="tel:+15122976548"
+              onClick={() =>
+                ReactGA.event({
+                  category: 'Contact',
+                  action: 'Tel Click from Contact Section',
+                })
+              }
               className="text-slate-300 hover:text-amber-400 transition-colors"
             >
               (512) 297-6548
@@ -501,6 +547,12 @@ export default function DBXHomeServices() {
 
           <a
             href={smsLink}
+            onClick={() =>
+              ReactGA.event({
+                category: 'Contact',
+                action: 'Text Daniel Click from Contact Section',
+              })
+            }
             className="mt-3 inline-block w-full sm:w-auto text-center bg-amber-500 hover:bg-amber-400 text-slate-900 font-semibold px-8 py-4 rounded-2xl shadow-2xl transition"
           >
             Click to Text
