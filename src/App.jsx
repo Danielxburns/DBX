@@ -3,7 +3,7 @@ import ReactGA from 'react-ga4';
 import { Helmet } from 'react-helmet-async';
 import logo from './assets/shield-logo.svg';
 import testimonialsData from './assets/testimonials.json';
-import danielPhoto from './assets/headshot.png';
+import danielPhoto from './assets/headshot.jpg';
 
 // Load each project's metadata (project.json) and media
 const projectMetaFiles = import.meta.glob('./assets/projects/**/project.json', {
@@ -344,25 +344,7 @@ export default function DBXHomeServices() {
                 <img
                   src={danielPhoto}
                   alt="Daniel Burns"
-                  className="h-full w-full object-cover object-[50%_35%]"
-                />
-
-                {/* subtle vignette to focus attention on face */}
-                <div
-                  className="pointer-events-none absolute inset-0 rounded-[999px]"
-                  style={{
-                    background:
-                      'radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(2,6,23,0.35) 80%, rgba(2,6,23,0.6) 100%)',
-                  }}
-                />
-
-                {/* very subtle warm tone overlay to match brand accent */}
-                <div
-                  className="pointer-events-none absolute inset-0 rounded-[999px]"
-                  style={{
-                    background:
-                      'radial-gradient(circle at 50% 30%, rgba(251,191,36,0.12), rgba(251,191,36,0.04) 40%, transparent 70%)',
-                  }}
+                  className="h-full w-full object-cover rounded-2xl "
                 />
               </div>
             </div>
